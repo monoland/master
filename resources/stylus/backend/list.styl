@@ -1,0 +1,38 @@
+.v-list
+    &&--navdraw
+        color: $grey.darken-3
+
+        & ^[0]__tile
+            &--active
+                background-color: $grey.lighten-2
+
+                &.primary--text
+                    & ^[0]__tile__content
+                        color: black
+                        font-weight: 500
+
+            &.primary--text
+                color: $red.base !important
+                caret-color: $red.base !important
+    
+        & ^[0]__group
+            &--active
+                &::before,
+                &::after
+                    height: 0
+                    background: transparent
+            
+            &__header
+                .primary--text
+                    color: $grey.darken-3 !important
+                    caret-color: $grey.darken-3 !important
+
+                &--active
+                    background-color: $grey.lighten-5
+                    border-bottom: 1px solid hsl(0, 0%, 93.3%)
+            
+                    & ^[0]__tile__title
+                        font-weight: 500
+            
+            &__items
+                background: $grey.lighten-5

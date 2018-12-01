@@ -1,0 +1,78 @@
+// .wrap__deck
+    // background-color: hsla(0,0%,100%,.2)
+    // box-shadow: 0 1px 3px rgba(0,0,0,.2), 0 1px 1px rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)
+    // padding: 8px
+    // border-radius: 5px
+
+.v-card
+    &.theme--light
+        &^[0]__deck
+            align-items: center
+            background-color: transparent
+            box-shadow: none
+            // background-color: hsla(0,0%,100%,.2)
+            // box-shadow: 0 1px 3px rgba(0,0,0,.2), 0 1px 1px rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)
+            display: flex
+            justify-content: center
+            // height: 72px
+
+            + .deck__title
+                color: white
+                font-weight: 600
+                margin: 12px 0
+                text-align: center
+                text-transform: uppercase
+                letter-spacing: 0.5px
+
+            .v-icon
+                background-color: hsla(0,0%,100%,.2)
+                box-shadow: 0 1px 3px rgba(0,0,0,.2), 0 1px 1px rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)
+                font-size: 54px
+                color: white
+                text-shadow: 0 1px 3px rgba(0,0,0,.2)
+                padding: 18px
+                border-radius: 50%
+
+    &__extended
+        margin-top: -64px
+    
+    &__form
+        &.theme--light
+            background-color: $grey.lighten-5
+
+        form
+            padding: 24px 24px 12px
+        
+        .v-toolbar ~ .layout.row
+            padding-bottom: 64px
+    
+    &__import
+        position: absolute
+        bottom: 24px
+        right: 24px
+
+        &--wrap
+            display: flex
+            align-items: center
+
+        &--title
+            flex: 1 1 0
+            padding-right: 16px
+            max-width: 262px
+            white-space: nowrap
+            text-overflow: ellipsis
+            overflow: hidden
+        
+    &.v-card--auth
+        & ^[0]__head
+            padding: 24px
+            text-align: center
+
+            *
+                font-family: Nunito !important
+    
+        & ^[0]__text
+            padding: 16px 24px
+
+        & ^[0]__actions
+            padding: 8px 24px 24px

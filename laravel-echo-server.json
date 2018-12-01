@@ -1,0 +1,36 @@
+{
+	"authHost": "https://master.dev",
+	"authEndpoint": "/broadcasting/auth",
+	"clients": [
+		{
+			"appId": "1f78692336c27920",
+			"key": "8afd1fc9993571b1016eac78d6d3272e"
+		}
+	],
+	"database": "redis",
+	"databaseConfig": {
+		"redis": {},
+		"sqlite": {
+			"databasePath": "/database/laravel-echo-server.sqlite"
+		}
+	},
+	"devMode": true,
+	"host": "master.dev",
+	"port": "6001",
+	"protocol": "https",
+	"socketio": {},
+	"sslCertPath": "/Users/monoland/.config/valet/Certificates/master.dev.crt",
+	"sslKeyPath": "/Users/monoland/.config/valet/Certificates/master.dev.key",
+	"sslCertChainPath": "",
+	"sslPassphrase": "",
+	"subscribers": {
+		"http": true,
+		"redis": true
+	},
+	"apiOriginAllow": {
+		"allowCors": true,
+		"allowOrigin": "https://master.dev",
+		"allowMethods": "GET",
+		"allowHeaders": "Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept, Authorization, X-CSRF-TOKEN, X-Socket-Id"
+	}
+}

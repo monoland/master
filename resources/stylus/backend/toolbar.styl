@@ -1,0 +1,22 @@
+.v-toolbar
+    box-shadow: none
+
+    &.theme--light
+        background-color: white
+    
+    &::after
+        position: absolute
+        pointer-events: none
+        box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .06)
+        content: ''
+        left: 0
+        right: 0
+        bottom: -5px
+        height: 5px
+        width: 100%
+        z-index: 1000
+    
+    &--extended
+        &::after
+            box-shadow: none 
+            height: 0

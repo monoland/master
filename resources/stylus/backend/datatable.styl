@@ -1,0 +1,34 @@
+.v-datatable
+    &__message
+        display: flex
+        align-items: center
+        justify-content: center
+        height: 48px
+    
+    &__text
+        padding-left: 8px
+    
+    thead
+        tr th
+            &:first-child
+                width: 80px
+
+                + th
+                    padding-left: 0
+            
+            .v-input--selection-controls
+                width: 24px
+
+            .v-input--selection-controls__input
+                margin-right: 0
+
+        th.date-updated
+            width: 169px
+    
+    tbody
+        tr td
+            &:first-child
+                width: 80px
+
+                + td
+                    padding-left: 0

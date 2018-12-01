@@ -1,0 +1,29 @@
+.v-pagetool
+    background-color: $blue-grey.lighten-5
+    display: flex
+    position: relative
+    padding: 12px 20px 12px 24px
+
+    &__title
+        display: flex
+        flex-direction: column
+        justify-content: center
+        padding-left: 16px
+
+        .caption
+            font-family: Nunito
+            margin-top: 2px
+    
+    .v-btn
+        background-color: $blue-grey.lighten-3
+        border-radius: 5px
+        margin: 4px
+
+        &--icon::before
+            border-radius: 5px
+
+        .v-ripple__animation
+            border-radius: 5px
+
+    .v-btn.v-btn--disabled
+        background-color: $blue-grey.lighten-4 !important

@@ -1,0 +1,10 @@
+{
+    "/vendor/monoland/backend.js": "/vendor/monoland/backend.js",
+    "/vendor/monoland/frontend.js": "/vendor/monoland/frontend.js",
+    "/vendor/monoland/frontend.css": "/vendor/monoland/frontend.css",
+    "/vendor/monoland/account.css": "/vendor/monoland/account.css",
+    "/vendor/monoland/backend.css": "/vendor/monoland/backend.css",
+    "/vendor/monoland/account.js": "/vendor/monoland/account.js",
+    "/vendor/monoland/vendor.js": "/vendor/monoland/vendor.js",
+    "/vendor/monoland/manifest.js": "/vendor/monoland/manifest.js"
+}

@@ -1,0 +1,42 @@
+.v-document
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+    border-radius: 3px
+    border: 2px dashed $grey.lighten-2
+    min-height: 120px
+    padding: 16px 8px
+    
+    &__upload
+        display: flex
+        flex: 1 1 0
+        padding: 16px
+        align-items: center
+        justify-content: center
+
+    &__info
+        display: flex
+        width: 100%
+
+        input
+            display: none
+
+        i.v-icon
+            position: absolute
+            cursor: pointer
+            right: 4px
+            top: -4px
+
+        &--extension
+            height: 84px
+            width: 84px
+
+        &--wrapper
+            flex: 1 1 0
+            padding-left: 12px
+    
+    &__data
+        span.label
+            display: inline-block
+            width: 64px

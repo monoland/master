@@ -6,55 +6,49 @@ use Illuminate\Support\Facades\File;
 
 class Media
 {
-    /**
-     * Undocumented function
-     *
-     * @param [type] $request
-     * @return void
-     */
+    protected $chunksFolder = 'chunks';
+    protected $uploadFolder = 'uploads';
+    protected $maxiParts = 200;
+    protected $inputName = 'fileUpload';
+    protected $fileName = 'fileName';
+    protected $totalParts = 'totalParts';
+
     public static function storeChunk($request)
     {
+        $handle = new static;
+
+        $uuid = $request->uuid;
+        $partIndex = (int) $request->partIndex;
+
         try {
-            if ($request->totalparts > 200) {
+            if ($request->totalParts > $handle->maxiParts) {
                 return ['error' => 'File is too large.', 'preventRetry' => true];
             }
 
-            $file = $request->file('media');
+            $file = $request->file($handle->inputName);
+            $file->storeAs($uuid, $partIndex, $handle->chunksFolder);
 
-            // total part
-            $uuid = $request->uuid;
-
-            $partindex = (int) $request->partindex;
-
-            $file->storeAs($uuid, $partindex, 'chunks');
-
-            return ['success' => true, 'uuid' => $uuid];
+            return [
+                'success' => true,
+                'uuid' => $uuid
+            ];
         } catch (\Exception $e) {
-            (new static)->cleanChunkDir($uuid);
-
-            return ['error' => $e->getMessage()];
+            $handle->cleanChunkDir($handle->chunksFolder, $uuid);
         }
     }
 
-    /**
-     * Undocumented function
-     *
-     * @param [type] $request
-     * @return void
-     */
     public static function combineChunk($request)
     {
         try {
+            $handle = new static;
             $uuid = $request->uuid;
-            $totalParts = $request->totalparts;
+            $totalParts = $request[$handle->totalParts];
 
-            $filename = explode('.', $request->filename);
+            $filename = explode('.', $request[$handle->fileName]);
             $extension = array_pop($filename);
 
-            $storage = $request->has('storage') ? $request->storage : 'media';
-
-            $chunkPath = storage_path('chunks' . DIRECTORY_SEPARATOR . $uuid);
-            $storePath = $storage . DIRECTORY_SEPARATOR . $uuid . '.' . $extension;
+            $chunkPath = storage_path($handle->chunksFolder . DIRECTORY_SEPARATOR . $uuid);
+            $storePath = $handle->uploadFolder . DIRECTORY_SEPARATOR . $uuid . '.' . $extension;
             $mediaPath = storage_path($storePath);
 
             $target = fopen($mediaPath, 'wb');
@@ -62,13 +56,12 @@ class Media
             for ($i = 0; $i < $totalParts; $i++) {
                 $chunk = fopen($chunkPath . DIRECTORY_SEPARATOR . $i, 'rb');
                 stream_copy_to_stream($chunk, $target);
-                unlink($chunkPath . DIRECTORY_SEPARATOR . $i);
                 fclose($chunk);
             }
 
             // Success
             fclose($target);
-            rmdir($chunkPath);
+            $handle->cleanChunkDir($uuid);
 
             $bytes = File::size(storage_path($storePath));
             $exten = File::extension(storage_path($storePath));
@@ -76,7 +69,7 @@ class Media
             $mimes = File::mimeType(storage_path($storePath));
 
             $infos = [
-                'filename' => $request->filename,
+                'filename' => $request[$handle->fileName],
                 'bytes' => $bytes,
                 'extension' => $exten,
                 'type' => $types,
@@ -84,7 +77,19 @@ class Media
                 'path' => $uuid . '.' . $exten
             ];
 
-            return ['success' => true, 'uuid' => $uuid, 'fileinfo' => $infos];
+            if (in_array($exten, ['jpg', 'jpeg', 'png'])) {
+                $result = array_merge($infos, [
+                    'url' => [
+                        'small' => route('imagecache', ['template' => 'small', 'filename' => $uuid . '.' . $exten]),
+                        'medium' => route('imagecache', ['template' => 'medium', 'filename' => $uuid . '.' . $exten]),
+                        'large' => route('imagecache', ['template' => 'large', 'filename' => $uuid . '.' . $exten])
+                    ]
+                ]);
+            } else {
+                $result = $infos;
+            }
+
+            return ['success' => true, 'uuid' => $uuid, 'fileinfo' => $result];
         } catch (\Exception $e) {
             (new static)->cleanChunkDir($uuid);
 
@@ -92,42 +97,36 @@ class Media
         }
     }
 
-    /**
-     * Undocumented function
-     *
-     * @param [type] $filename
-     * @return void
-     */
     public static function destroyMedia($filename)
     {
-        if (File::delete(storage_path('media' . DIRECTORY_SEPARATOR . $filename))) {
+        $handle = new static;
+
+        if (File::delete(storage_path($handle->uploadFolder . DIRECTORY_SEPARATOR . $filename))) {
             return ['success' => true];
         }
 
         return ['success' => false];
     }
 
-    /**
-     * Undocumented function
-     *
-     * @param [type] $uuid
-     * @return void
-     */
     protected function cleanChunkDir($uuid)
     {
-        $dir = storage_path('chunks' . DIRECTORY_SEPARATOR . $uuid);
+        try {
+            $dir = storage_path($this->chunksFolder . DIRECTORY_SEPARATOR . $uuid);
 
-        $it = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
+            $its = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+            $fls = new \RecursiveIteratorIterator($its, \RecursiveIteratorIterator::CHILD_FIRST);
 
-        foreach ($files as $file) {
-            if ($file->isDir()) {
-                rmdir($file->getRealPath());
-            } else {
-                unlink($file->getRealPath());
+            foreach ($fls as $file) {
+                if ($file->isDir()) {
+                    rmdir($file->getRealPath());
+                } else {
+                    unlink($file->getRealPath());
+                }
             }
-        }
 
-        rmdir($dir);
+            rmdir($dir);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
